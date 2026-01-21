@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A modern, accessible dictionary application with pronunciation audio and comprehensive word definitions">
+    <meta name="keywords" content="dictionary, word lookup, pronunciation, definitions, synonyms">
+    <meta name="author" content="MAVI Dictionary">
+    <meta name="theme-color" content="#6366f1">
+    
+    <!-- SEO Meta Tags -->
+    <title>📖MAVI Dictionary - Word Lookup & Pronunciation</title>
+    
+    <!-- Preconnect to API -->
+    <link rel="preconnect" href="https://api.dictionaryapi.dev">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="background-animation">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+            <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+        </button>
+
+        <!-- Home Button -->
+        <a href="index.html" class="home-button" aria-label="Go to home">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+        </a>
+        
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="app-title">
+                    <span class="icon book-icon"></span>
+                    <span class="title-text">MAVI Dictionary</span>
+                </h1>
+                <p class="app-subtitle">Discover meanings, pronunciations, and more</p>
+            </div>
+        </header>
+
+        <!-- Search Section -->
+        <section class="search-section" role="search">
+            <div class="search-container glass-card">
+                <div class="search-input-wrapper">
+                    <label for="search-input" class="sr-only">Search for a word</label>
+                    <input 
+                        type="text" 
+                        id="search-input" 
+                        class="search-input" 
+                        placeholder="Type a word to search..."
+                        aria-label="Search for a word"
+                        autocomplete="off"
+                        spellcheck="false"
+                    >
+                    <button 
+                        id="search-btn" 
+                        class="search-btn"
+                        aria-label="Search"
+                        type="button"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                </div>
+                <p id="search-hint" class="search-hint">Press Enter or click the search button</p>
+            </div>
+        </section>
+
+        <!-- Loading Indicator -->
+        <div id="loading-indicator" class="loading-container" role="status" aria-live="polite" aria-hidden="true">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Searching...</p>
+        </div>
+
+        <!-- Error Message -->
+        <div id="error-container" class="error-container" role="alert" aria-live="assertive" aria-hidden="true">
+            <div class="error-card glass-card">
+                <div class="error-icon">⚠️</div>
+                <h2 class="error-title" id="error-title">Oops!</h2>
+                <p class="error-message" id="error-message"></p>
+                <button id="dismiss-error" class="btn-primary">Dismiss</button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <main id="results-container" class="results-container" role="main" aria-live="polite">
+            <!-- Results will be dynamically inserted here -->
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p class="footer-text">
+                Powered by <a href="https://dictionaryapi.dev/" target="_blank" rel="noopener noreferrer" class="footer-link">Free Dictionary API</a>
+            </p>
+            <p class="footer-copyright">© 2026 📖MAVI Dictionary. Built with ❤️</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="app.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        // Register service worker for offline functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registered:', registration.scope);
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed:', err);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
